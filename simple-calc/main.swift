@@ -8,38 +8,45 @@
 
 import Foundation
 
-typealias OperatorFunction = ([UInt]) -> UInt
-
-class SimpleOperation {
-
-    let minOperands: Int
-    let operate: OperatorFunction
-
-    init(minOperands: Int, operation: @escaping OperatorFunction) {
-        self.minOperands = minOperands
-        self.operate = operation
-    }
-}
-
-var numericalInputHistory: [UInt] = []
-
-var operatorFunctions: [String : SimpleOperation] = [
-    "+" : SimpleOperation(minOperands: 2, operation: { inputs in
-        return inputs.reduce(0, +)
-    })
+var definedOperators: [String : SimpleOperator] = [
+    "+" : BinaryOperator(+),
+    "-" : BinaryOperator(-),
+    "*" : BinaryOperator(*),
+    "/" : BinaryOperator(/),
+    "%" : BinaryOperator(%)
 ]
 
 func promptForInput() -> UInt {
+    var currentOperatorInfo: (name: String, op: SimpleOperator)?
+    var numericalInputHistory: [UInt] = []
+
     repeat {
         let input = readLine(strippingNewline: true)!
 
+        // accumulate numbers
         if let numericalInput = UInt.init(input) {
             numericalInputHistory.append(numericalInput)
-        } else if let operatorFunction = operatorFunctions[input] {
-            return operatorFunction.operate(numericalInputHistory)
-        } else {
-            print("\"\(input)\" command not recognized. Try one of \(operatorFunctions.keys)")
         }
+            // attempt to set operator
+        else if let definedOperator = definedOperators[input] {
+            if currentOperatorInfo == nil {
+                currentOperatorInfo = (input, definedOperator)
+            } else {
+                print("Operator already set to \(currentOperatorInfo!.name)")
+            }
+        }
+            // catch unknown input
+        else {
+            print("\"\(input)\" command not recognized. Try one of [\(definedOperators.keys.joined(separator: ", "))]")
+            continue
+        }
+
+        // attempt to run current operation if there is one
+        if currentOperatorInfo != nil
+            && currentOperatorInfo!.op.isValidOperandCount(numericalInputHistory.count) {
+            return currentOperatorInfo!.op.operate(numericalInputHistory)
+        }
+
     } while true
 }
 
