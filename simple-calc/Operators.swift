@@ -41,7 +41,7 @@ class MultaryOperator : SimpleOperator {
     let operate: OperatorFunction
     let isValidOperandCount: (Int) -> Bool = { $0 >= 2 }
 
-    required init(_ operation: @escaping OperatorFunction) {
+    required init(_ operation: @escaping ([UInt]) -> UInt) {
         self.operate = operation
     }
 }

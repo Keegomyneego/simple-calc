@@ -21,7 +21,9 @@ var definedOperators: [String : SimpleOperator] = [
     "*" : BinaryOperator(*),
     "/" : BinaryOperator(/),
     "%" : BinaryOperator(%),
-    "fact" : UnaryOperator(fact)
+    "fact" : UnaryOperator(fact),
+    "count" : MultaryOperator({ UInt($0.count) }),
+    "avg" : MultaryOperator({ UInt($0.reduce(0, +)) / UInt($0.count) })
 ]
 
 func promptForInput() -> UInt {
