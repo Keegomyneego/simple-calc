@@ -15,8 +15,18 @@ protocol SimpleOperator {
     var isValidOperandCount: (Int) -> Bool { get }
 }
 
-class BinaryOperator : SimpleOperator {
+class UnaryOperator : SimpleOperator {
+    let operate: OperatorFunction
+    let isValidOperandCount: (Int) -> Bool = { $0 == 1 }
 
+    required init(_ operation: @escaping (UInt) -> UInt) {
+        self.operate = {
+            return operation( $0[$0.count - 1] )
+        }
+    }
+}
+
+class BinaryOperator : SimpleOperator {
     let operate: OperatorFunction
     let isValidOperandCount: (Int) -> Bool = { $0 == 2 }
 
@@ -28,7 +38,6 @@ class BinaryOperator : SimpleOperator {
 }
 
 class MultaryOperator : SimpleOperator {
-
     let operate: OperatorFunction
     let isValidOperandCount: (Int) -> Bool = { $0 >= 2 }
 

@@ -8,12 +8,20 @@
 
 import Foundation
 
+// Factorial
+func fact(n: UInt) -> UInt {
+    return n <= 1
+        ? 1
+        : n * fact(n: n - 1)
+}
+
 var definedOperators: [String : SimpleOperator] = [
     "+" : BinaryOperator(+),
     "-" : BinaryOperator(-),
     "*" : BinaryOperator(*),
     "/" : BinaryOperator(/),
-    "%" : BinaryOperator(%)
+    "%" : BinaryOperator(%),
+    "fact" : UnaryOperator(fact)
 ]
 
 func promptForInput() -> UInt {
@@ -57,7 +65,6 @@ repeat {
     let result = promptForInput()
 
     print("Result: \(result)")
-    print("")
     print("")
 } while true
 
