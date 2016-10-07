@@ -23,20 +23,19 @@ func promptForInput() -> UInt {
     repeat {
         let input = readLine(strippingNewline: true)!
 
-        // accumulate numbers
         if let numericalInput = UInt.init(input) {
+            // accumulate numbers
             numericalInputHistory.append(numericalInput)
-        }
+        }else if let definedOperator = definedOperators[input] {
             // attempt to set operator
-        else if let definedOperator = definedOperators[input] {
             if currentOperatorInfo == nil {
                 currentOperatorInfo = (input, definedOperator)
             } else {
                 print("Operator already set to \(currentOperatorInfo!.name)")
+                continue
             }
-        }
+        } else {
             // catch unknown input
-        else {
             print("\"\(input)\" command not recognized. Try one of [\(definedOperators.keys.joined(separator: ", "))]")
             continue
         }
